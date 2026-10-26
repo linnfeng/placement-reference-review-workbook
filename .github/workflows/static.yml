@@ -1,0 +1,92 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy placement reference workbook to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare authored reference workbook
+        run: |
+          mkdir -p generated_site
+          cat > generated_site/index.html <<'WORKBOOK_HTML'
+          <!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A boundary-first workbook for tattoo placement references</title><meta name="description" content="A project-associated workbook for interpreting photo-and-artwork references without confusing visual planning with physical outcomes."><style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef4f2;color:#172e2c;font:18px/1.7 system-ui,sans-serif}header,main,footer{max-width:1060px;margin:auto;padding:28px}header{padding-top:64px}h1{font-size:clamp(2rem,5vw,3.6rem);line-height:1.1}h2{margin-top:2.6em;line-height:1.3;color:#154e47}main{background:white;border-radius:20px;box-shadow:0 8px 35px #14352b10}p{max-width:78ch}a{color:#075d52;text-underline-offset:3px}img{max-width:100%;height:auto;border-radius:12px}nav{display:flex;gap:14px;flex-wrap:wrap}figure{margin:32px 0}figcaption,footer{font-size:.9rem;color:#48615d}footer a{color:inherit}strong{color:#153f37}</style></head><body>
+          <header><span>REFERENCE REVIEW WORKBOOK</span><h1>A boundary-first workbook for tattoo placement references</h1><nav aria-label="Workbook sections"><a href="#purpose">Purpose</a><a href="#sources">Sources</a><a href="#comparison">Comparison</a><a href="#sharing">Sharing</a><a href="#review">Review</a></nav></header>
+          <main id="workbook"><figure><img src="https://tattoosimulator.org/og.png" alt="Official Tattoo Simulator website preview, not an individual tattoo result"><figcaption>Official website preview. This is not a personal result or a professional assessment.</figcaption></figure>
+          <p>A useful tattoo placement reference should make a conversation easier to follow, not make uncertainty harder to see. The picture may look complete while the question remains open: which source view is being compared, why was the artwork moved, and what decision cannot be made from the image alone? This workbook organizes those boundaries before anyone treats an attractive arrangement as a result, a measurement, or a professional recommendation.</p>
+          <p>This is a project-associated guide for Tattoo Simulator, prepared autonomously using AI assistance. It is not an independent review, a customer study, or professional tattooing or medical advice. Every example label and planning situation here is synthetic. No example represents an actual person's body, an artist's approval, a healed tattoo, or a tested outcome. Use the questions to organize references and discussions, not to predict a result or replace appropriate judgment.</p>
+          <h2 id="purpose">1. State the purpose in one sentence</h2>
+          <p>Begin with the purpose of the reference rather than a verdict about the design. A fictional example could say that the image is intended to discuss the direction of the composition. Another could say that it compares two positions within the same source photograph. A clear purpose helps someone understand what feedback would be useful without asking the reference to answer every question about a possible future tattoo.</p>
+          <p>For that limited exercise, a <a href="https://tattoosimulator.org/">tattoo overlay</a> workflow can combine a body photo with separate artwork and provide position, size, rotation, opacity, mirroring, reset, and PNG export controls. Those are display operations available in Tattoo Simulator's placement workflow. They do not establish physical scale, professional suitability, healing behavior, or permission to use a source. Keep the purpose of the reference narrower than the range of decisions surrounding it.</p>
+          <h2 id="sources">2. Distinguish sources from exports</h2>
+          <p>Retain the original photo and artwork separately from an exported reference. A small set of source-version labels can make a later correction easier to explain, particularly when the artwork has changed or several photographs show different views. The labels should help recover context rather than create a complicated archive. Do not overwrite a source merely because one arrangement has been selected for discussion in the current exchange.</p>
+          <p>The source labels in this workbook are examples, not verified identities or permissions. A real label may point to sensitive material, so avoid including names, locations, appointment details, or other personal circumstances unless they are necessary and appropriate. A source register can become private information in its own right. Keep its audience and retention separate from the decision to export a convenient picture for a particular conversation.</p>
+          <h2 id="view">3. Ask what the view can actually show</h2>
+          <p>A photograph presents a particular view, with its own perspective, lighting, pose, and crop. A close view may help discuss a detail while omitting context that matters to another question. A wider image may provide context while revealing more personal material than the recipient needs. Choose a view for the stated purpose and consider whether a smaller or less identifying reference can support the same discussion.</p>
+          <p>Do not translate a screen distance into a physical dimension without an appropriate separate process. The size of artwork in one photograph is not automatically equivalent to its size in another view. If the question depends on information the image cannot establish, name that limitation. A different angle or another export may help with a visual question, but it should not be presented as a substitute for a measurement or professional conversation.</p>
+          <h2 id="comparison">4. Name the intended difference</h2>
+          <p>A comparison is easier to interpret when the intended difference is explicit. In a fictional pair, the same photo and artwork might be used while the rotation changes. If the photo, size, position, and opacity all change together, a preference for the second reference may be genuine but harder to explain. Record what was intentionally changed without claiming that every other influence on the impression has been controlled.</p>
+          <p>This is an organizational technique, not a controlled experiment. The note should say what the comparison was intended to discuss and which sources were used. It does not need the language of a test result to be useful. If a source correction rather than an exploratory edit caused the new version, identify that distinction as well. A newer file is not necessarily a better arrangement or a step toward a predetermined conclusion.</p>
+          <h2 id="display">5. Explain display settings modestly</h2>
+          <p>Opacity can make an overlay easier to inspect against a photograph. A note might explain that opacity was reduced to compare alignment or inspect the source beneath the artwork. It should not call the setting a prediction of ink density, skin response, healing, or longevity. A display adjustment has a limited purpose within the reference; it does not need an invented physical interpretation in order to be helpful.</p>
+          <p>Likewise, an apparently integrated composition does not prove that the photograph and artwork describe a future result accurately. Lighting, contrast, and cropping can affect that impression. Explain the display choice that matters to the conversation and avoid describing the image as verified or guaranteed. The recipient may see the export without the editing interface, so an assumption that felt obvious while preparing it may need to be stated plainly.</p>
+          <h2 id="meaning">6. Check whether an edit changes meaning</h2>
+          <p>Mirroring can change the direction of a composition, but it can also change lettering, symbols, and asymmetric artwork. Label a mirrored option explicitly and preserve the original design separately. Do not assume that an attractive transformation is equivalent to the source. The question of whether the transformed design is appropriate may need a different conversation from the question of whether it appears balanced within one photograph.</p>
+          <p>The same caution applies when changing the artwork version. A corrected source, an alternate drawing, and an exploratory arrangement are different kinds of revision. A short explanation can preserve those distinctions without telling the recipient the entire editing history. The useful result is a reference whose role is understandable, not a record that makes every revision sound like an improvement or gives a visual preference the status of approval.</p>
+          <h2 id="notes">7. Keep a small, readable reference note</h2>
+          <p>A practical note can identify the reference label, photo version, artwork version, intended change, and unresolved question. These fields are a suggested personal worksheet, not a claim about a feature or data format exposed by the website. Use only what is necessary for the current purpose. A large form can make a conversation harder to follow while creating an impression of rigor that the reference does not actually support.</p>
+          <p>For a synthetic example, Reference B could use Photo A and Artwork One, with rotation as the intended change and orientation as the open question. The labels explain a relationship between files; they do not verify the files or grant rights to use them. Keep sensitive associations out of public demonstrations and make clear when an example is fictional. Administrative neatness should not be confused with evidence about a person or an outcome.</p>
+          <h2 id="feedback">8. Preserve the scope of feedback</h2>
+          <p>A recipient can prefer a composition without approving a placement or deciding that the idea should proceed. Record feedback in language that preserves its original scope. A fictional note might say that one orientation was preferred for discussion while questions about physical placement remained open. Do not turn silence, an emoji, enthusiasm, or a broad statement into a professional conclusion simply because a worksheet has somewhere to record a status.</p>
+          <p>If a separate conversation with an artist is needed, say so rather than treating the export as its conclusion. A professional may need information and judgment that a photographic overlay cannot establish. The person considering the idea may also decide to pause, change direction, or stop. A reference and its revision history do not create an obligation to continue, and a selected picture should not be described as a commitment that has not actually been made.</p>
+          <h2 id="sharing">9. Make sharing a separate decision</h2>
+          <p>A reference prepared for a private exchange is not automatically appropriate for a group message, portfolio, or public example. Before forwarding it, reconsider the audience, the source permissions, and the personal information exposed by the image and note. A caption saying mockup explains the image's role, but it does not establish consent, enforce an access restriction, or make the underlying material anonymous. Treat those as separate decisions with their own basis.</p>
+          <p>Check current service notices rather than assuming a particular storage or processing policy from the interface. Avoid collecting additional personal material merely to make a worksheet look complete. If a recipient needs less detail to understand the question, consider sharing less. Keep only what is needed for the agreed purpose and decide what should happen to the reference after the exchange instead of letting temporary planning material become a permanent record by default.</p>
+          <h2 id="handoff">10. Let context travel with the reference</h2>
+          <p>An exported image can become separated from the message that originally explained it. Where appropriate, include a short description that identifies its purpose, its important source versions, and the display choice being compared. Write for someone who did not watch the editing session. Interface shorthand and almost identical filenames may feel sufficient to the sender while leaving a later recipient to infer the question from visual appearance alone.</p>
+          <p>An informative description can help make the reference understandable without creating an unsupported story. If an image is an official website preview, identify it as such rather than presenting it as a user's result. If the arrangement is hypothetical, say so. The words should clarify the role of the image and the uncertainty around it, not manufacture evidence of a test, an endorsement, a professional assessment, or an experience that did not happen.</p>
+          <h2 id="next">11. Choose the next step proportionately</h2>
+          <p>The next useful action may be confirming an artwork version, choosing a clearer source view, asking a focused question, or deciding that another image will not help. More exports can feel productive while repeating the same uncertainty. Identify the kind of question that remains before making another visual change. If the issue concerns permission, professional suitability, or a decision someone is not ready to make, a new rotation is unlikely to settle it.</p>
+          <p>It is reasonable to stop preparing images or withdraw material from a shared space. A planning workflow does not need to end in a tattoo, a public post, or a persuasive before-and-after story. Preserve the ability to reconsider the idea and explain any necessary correction within the appropriate limited audience. A useful reference supports a conversation; it should not become a device for pushing that conversation toward a particular outcome.</p>
+          <h2 id="review">12. Review the boundary before calling it finished</h2>
+          <p>Before closing the exercise, check that the reference and explanation identify the intended comparison, use the correct source versions, and avoid claims the image cannot support. Confirm that the audience and retention still make sense for the purpose. This is a communication checklist, not a certification process. A tidy workbook, a downloadable PNG, and a clear set of labels cannot grant permission or replace the decisions that belong elsewhere.</p>
+          <p>The durable outcome is an interpretable reference with visible limits. Keep sources separate from exports, describe revisions honestly, distinguish feedback from approval, and preserve room for personal and professional judgment. An image can be useful without deciding everything. When the picture and its explanation make that modest role clear, the next conversation is better equipped to identify a question, an alternative, or a reason to pause rather than mistake visual polish for certainty.</p>
+          
+          </main><footer>Independent reference workbook layout. Project affiliation and autonomous AI preparation are disclosed in the introduction. No personal photographs are collected on this page.</footer></body></html>
+          WORKBOOK_HTML
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload only the independently authored static site
+          path: 'generated_site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
